@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecossistema de Produção de E-books com IA em 2026</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+Pro:wght@300;400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+        :root {
+            --cor-primaria: #1a1a2e;
+            --cor-secundaria: #16213e;
+            --cor-destaque: #e94560;
+            --cor-destaque-suave: #f4a261;
+            --cor-texto: #2d2d2d;
+            --cor-texto-claro: #555;
+            --cor-fundo: #fefefe;
+            --cor-fundo-secundario: #f8f9fa;
+            --cor-borda: #e0e0e0;
+            --cor-citacao: #e8f4f8;
+            --gradiente-capa: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            color: var(--cor-texto);
+            background: var(--cor-fundo);
+            line-height: 1.7;
+            font-size: 18px;
+        }
+
+        /* ==================== CAPA ==================== */
+        .capa {
+            min-height: 100vh;
+            background: var(--gradiente-capa);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capa::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 80%;
+            height: 120%;
+            background: radial-gradient(ellipse, rgba(233, 69, 96, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .capa::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -20%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(ellipse, rgba(244, 162, 97, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .capa-badge {
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid rgba(233, 69, 96, 0.4);
+            color: var(--cor-destaque);
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .capa-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.8rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.15;
+            max-width: 900px;
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        .capa-titulo span {
+            color: var(--cor-destaque-suave);
+        }
+
+        .capa-subtitulo {
+            font-size: 1.35rem;
+            color: rgba(255,255,255,0.75);
+            max-width: 700px;
+            font-weight: 300;
+            margin-bottom: 50px;
+            z-index: 1;
+        }
+
+        .capa-divisor {
+            width: 80px;
+            height: 3px;
+            background: var(--cor-destaque);
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .capa-meta {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95rem;
+            z-index: 1;
+        }
+
+        .capa-meta strong {
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+        }
+
+        .capa-ano {
+            position: absolute;
+            bottom: 40px;
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(255,255,255,0.03);
+            letter-spacing: 10px;
+        }
+
+        /* ==================== ÍNDICE ==================== */
+        .indice {
+            background: var(--cor-fundo-secundario);
+            padding: 80px 40px;
+        }
+
+        .indice-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .indice-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: var(--cor-primaria);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .indice-subtitulo {
+            text-align: center;
+            color: var(--cor-texto-claro);
+            margin-bottom: 50px;
+            font-size: 1.05rem;
+        }
+
+        .indice-lista {
+            list-style: none;
+        }
+
+        .indice-item {
+            display: flex;
+            align-items: baseline;
+            padding: 18px 24px;
+            margin-bottom: 8px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--cor-borda);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .indice-item:hover {
+            transform: translateX(8px);
+            border-color: var(--cor-destaque);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .indice-numero {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--cor-destaque);
+            min-width: 55px;
+            flex-shrink: 0;
+        }
+
+        .indice-texto {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--cor-primaria);
+        }
+
+        .indice-pagina {
+            margin-left: auto;
+            color: var(--cor-texto-claro);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        /* ==================== CONTEÚDO ==================== */
+        .conteudo {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* ==================== CAPÍTULOS ==================== */
+        .capitulo {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--cor-borda);
+        }
+
+        .capitulo:last-child {
+            border-bottom: none;
+        }
+
+        .capitulo-cabecalho {
+            margin-bottom: 45px;
+            position: relative;
+        }
+
+        .capitulo-numero {
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: rgba(233, 69, 96, 0.08);
+            line-height: 1;
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            z-index: 0;
+        }
+
+        .capitulo-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--cor-primaria);
+            position: relative;
+            z-index: 1;
+            padding-top: 15px;
+        }
+
+        .capitulo-subtitulo {
+            font-size: 1.1rem;
+            color: var(--cor-texto-claro);
+            margin-top: 10px;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        .capitulo-divisor {
+            width: 50px;
+            height: 3px;
+            background: var(--cor-destaque);
+            margin-top: 20px;
+        }
+
+        /* ==================== PARÁGRAFOS E TEXTOS ==================== */
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        strong {
+            font-weight: 700;
+            color: var(--cor-primaria);
+        }
+
+        /* ==================== LISTAS ==================== */
+        ul, ol {
+            margin: 25px 0 25px 30px;
+        }
+
+        li {
+            margin-bottom: 14px;
+            padding-left: 10px;
+        }
+
+        li::marker {
+            color: var(--cor-destaque);
+        }
+
+        /* ==================== CITAÇÕES ==================== */
+        blockquote {
+            background: var(--cor-citacao);
+            border-left: 4px solid var(--cor-destaque);
+            padding: 28px 32px;
+            margin: 35px 0;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            color: var(--cor-secundaria);
+            font-size: 1.05rem;
+        }
+
+        blockquote cite {
+            display: block;
+            margin-top: 15px;
+            font-style: normal;
+            font-size: 0.9rem;
+            color: var(--cor-texto-claro);
+        }
+
+        /* ==================== DESTAQUES ==================== */
+        .destaque-box {
+            background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
+            color: #fff;
+            padding: 35px 40px;
+            border-radius: 16px;
+            margin: 35px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .destaque-box::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 50%;
+            height: 100%;
+            background: radial-gradient(ellipse, rgba(233, 69, 96, 0.2) 0%, transparent 70%);
+        }
+
+        .destaque-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .destaque-box p {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0;
+            text-align: left;
+        }
+
+        .destaque-box ul {
+            position: relative;
+            z-index: 1;
+            margin: 15px 0 0 20px;
+        }
+
+        .destaque-box li {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .destaque-box li::marker {
+            color: var(--cor-destaque-suave);
+        }
+
+        /* ==================== TABELAS ==================== */
+        .tabela-container {
+            overflow-x: auto;
+            margin: 35px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            font-size: 0.95rem;
+        }
+
+        thead {
+            background: var(--cor-primaria);
+            color: #fff;
+        }
+
+        th {
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--cor-borda);
+            vertical-align: top;
+        }
+
+        tbody tr:hover {
+            background: var(--cor-fundo-secundario);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ==================== INFO BOXES ==================== */
+        .info-box {
+            background: #fff;
+            border: 1px solid var(--cor-borda);
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .info-box-titulo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--cor-primaria);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-box-titulo::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 24px;
+            background: var(--cor-destaque);
+            border-radius: 3px;
+        }
+
+        /* ==================== CHECKLIST ==================== */
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li {
+            padding-left: 36px;
+            position: relative;
+        }
+
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 1px;
+            width: 24px;
+            height: 24px;
+            background: rgba(233, 69, 96, 0.1);
+            color: var(--cor-destaque);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .checklist li::marker {
+            content: '';
+        }
+
+        /* ==================== SEÇÃO CONCLUSÃO ==================== */
+        .conclusao-especial {
+            background: var(--gradiente-capa);
+            color: #fff;
+            padding: 60px 50px;
+            border-radius: 16px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .conclusao-especial h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .conclusao-especial p {
+            color: rgba(255,255,255,0.85);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ==================== RODAPÉ ==================== */
+        .rodape-livro {
+            background: var(--cor-primaria);
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 50px 30px;
+            margin-top: 60px;
+        }
+
+        .rodape-livro p {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* ==================== NAVEGAÇÃO FLUTUANTE ==================== */
+        .nav-flutuante {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: var(--cor-destaque);
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* ==================== RESPONSIVO ==================== */
+        @media (max-width: 768px) {
+            .capa-titulo {
+                font-size: 2.4rem;
+            }
+
+            .capa-subtitulo {
+                font-size: 1.1rem;
+            }
+
+            .capitulo-titulo {
+                font-size: 1.7rem;
+            }
+
+            .capitulo-numero {
+                font-size: 4rem;
+            }
+
+            .conteudo {
+                padding: 0 20px;
+            }
+
+            th, td {
+                padding: 12px 14px;
+                font-size: 0.85rem;
+            }
+
+            .destaque-box,
+            .conclusao-especial {
+                padding: 25px 22px;
+            }
+        }
+
+        /* ==================== PRINT ==================== */
+        @media print {
+            .nav-flutuante {
+                display: none;
+            }
+
+            .capa {
+                page-break-after: always;
+            }
+
+            .indice {
+                page-break-after: always;
+            }
+
+            .capitulo {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== CAPA ==================== -->
+    <section class="capa">
+        <div class="capa-badge">Relatório Técnico</div>
+        <h1 class="capa-titulo">Ecossistema de Produção de <span>E-books com IA</span> em 2026</h1>
+        <p class="capa-subtitulo">Otimização de fluxos de trabalho editoriais e conformidade técnica na era da inteligência artificial generativa</p>
+        <div class="capa-divisor"></div>
+        <div class="capa-meta">
+            <p><strong>Elaborado por:</strong> Estrategista de Publicação Digital e Especialista em Fluxos de Trabalho de IA</p>
+            <p style="margin-top: 8px;">12 de fevereiro de 2026</p>
+        </div>
+        <div class="capa-ano">2026</div>
+    </section>
+
+    <!-- ==================== ÍNDICE ==================== -->
+    <section class="indice" id="indice">
+        <div class="indice-container">
+            <h2 class="indice-titulo">Índice</h2>
+            <p class="indice-subtitulo">Navegue pelos capítulos do relatório</p>
+            <ul class="indice-lista">
+                <a href="#cap1" class="indice-item">
+                    <span class="indice-numero">01</span>
+                    <span class="indice-texto">Contextualização e Objetivos</span>
+                </a>
+                <a href="#cap2" class="indice-item">
+                    <span class="indice-numero">02</span>
+                    <span class="indice-texto">Fase de Concepção: Nichos Lucrativos</span>
+                </a>
+                <a href="#cap3" class="indice-item">
+                    <span class="indice-numero">03</span>
+                    <span class="indice-texto">Arquitetura de Conteúdo e Ferramentas</span>
+                </a>
+                <a href="#cap4" class="indice-item">
+                    <span class="indice-numero">04</span>
+                    <span class="indice-texto">Identidade Visual e Design de Capas com IA</span>
+                </a>
+                <a href="#cap5" class="indice-item">
+                    <span class="indice-numero">05</span>
+                    <span class="indice-texto">Integridade Editorial e Revisão Humana</span>
+                </a>
+                <a href="#cap6" class="indice-item">
+                    <span class="indice-numero">06</span>
+                    <span class="indice-texto">Fluxo de Publicação e Distribuição Digital</span>
+                </a>
+                <a href="#cap7" class="indice-item">
+                    <span class="indice-numero">07</span>
+                    <span class="indice-texto">Conclusão e Perspectivas de Mercado</span>
+                </a>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ==================== CONTEÚDO ==================== -->
+    <main class="conteudo">
+
+        <!-- CAPÍTULO 1 -->
+        <article class="capitulo" id="cap1">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">01</div>
+                <h2 class="capitulo-titulo">Contextualização e Objetivos do Relatório</h2>
+                <p class="capitulo-subtitulo">Compreendendo o papel da IA no panorama editorial contemporâneo</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <p>No panorama editorial de 2026, a Inteligência Artificial consolidou-se como uma <strong>inovação disruptiva</strong> que redefiniu a velocidade de colocação de produtos no mercado. Este relatório analisa os processos técnicos necessários para transitar de rascunhos probabilísticos para obras de autoridade comercial.</p>
+
+            <p>É imperativo distinguir as capacidades tecnológicas atuais. Sob a ótica dos Testes de Turing mencionados em estudos recentes:</p>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Tipologia de Sistemas de IA</h3>
+                <ul>
+                    <li><strong>IAs Fortes:</strong> Sistemas teóricos com consciência e raciocínio autêntico, ainda não atingidos pela tecnologia atual.</li>
+                    <li><strong>IAs Fracas:</strong> As ferramentas de 2026 (LLMs e geradores de imagem), que operam estritamente via cálculos probabilísticos automatizados.</li>
+                </ul>
+            </div>
+
+            <p>Como estrategistas, devemos entender que a percepção de "inteligência" nestas ferramentas decorre da nossa tendência de <strong>antropomorfizar saídas estatísticas</strong>. Em 2026, a IA não é um autor autônomo, mas um assistente técnico cuja eficiência depende da curadoria humana para evitar erros de cálculo probabilístico e alucinações factuais.</p>
+
+            <blockquote>
+                "A IA é um assistente técnico cuja eficiência depende da curadoria humana para evitar erros de cálculo probabilístico e alucinações factuais."
+            </blockquote>
+        </article>
+
+        <!-- CAPÍTULO 2 -->
+        <article class="capitulo" id="cap2">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">02</div>
+                <h2 class="capitulo-titulo">Fase de Concepção: Nichos Lucrativos e Resolução de "Dores"</h2>
+                <p class="capitulo-subtitulo">Estratégias de micronichamento para máxima relevância</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <p>A saturação de conteúdos genéricos em 2026 exige um foco cirúrgico na especificidade do nicho. A eficácia de um e-book é medida pela sua capacidade de resolver uma "dor" concreta de um público bem delimitado.</p>
+
+            <div class="destaque-box">
+                <h3>Exemplo Prático de Micronichamento</h3>
+                <p>Um guia para <em>"alimentação saudável"</em> é tecnicamente inferior a um <strong>"guia de preparação de refeições para enfermeiros em turnos de 12 horas"</strong>. A especificidade aumenta drasticamente o valor percebido e a conversão.</p>
+            </div>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Critérios de Seleção de Nicho (Estratégia 2026)</h3>
+
+            <ul>
+                <li><strong>Micronichamento:</strong> Identificação de subgrupos com rotinas profissionais ou pessoais únicas que demandam soluções especializadas.</li>
+                <li><strong>Arquitetura de Solução:</strong> O conteúdo deve ser estruturado como uma resposta direta a um obstáculo prático detectado via mineração de dados de interesse.</li>
+                <li><strong>Autoridade Sintética vs. Humana:</strong> O tema deve permitir que a IA estruture a lógica, enquanto o autor injeta a "voz única" e a experiência vivida.</li>
+                <li><strong>Viabilidade de Keywords:</strong> Análise prévia de volume de busca e concorrência no Amazon KDP e motores de busca.</li>
+            </ul>
+        </article>
+
+        <!-- CAPÍTULO 3 -->
+        <article class="capitulo" id="cap3">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">03</div>
+                <h2 class="capitulo-titulo">Arquitetura de Conteúdo: Ferramentas de Texto e Estruturação</h2>
+                <p class="capitulo-subtitulo">O ecossistema de geração de conteúdo em 2026</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <p>O maior desafio técnico em 2026 é a <strong>saturação da janela de contexto</strong>, que causa perda de coerência em obras longas. O diferencial estratégico reside na <strong>Continuidade de Capítulos</strong>, garantindo que o fluxo narrativo não seja uma colcha de retalhos de prompts isolados.</p>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Tabela Comparativa: Ecossistema de Geração de Conteúdo (2026)</h3>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ferramenta</th>
+                            <th>Ponto Forte</th>
+                            <th>Limitação Técnica</th>
+                            <th>Formatos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Inkfluence AI</strong></td>
+                            <td>Continuidade real de capítulos; Gerador de Audiobooks (9 vozes AI); App iOS integrado.</td>
+                            <td>Editor monousuário (sem colaboração real-time).</td>
+                            <td>PDF, EPUB, DOCX</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ChatGPT</strong></td>
+                            <td>Brainstorming de alto nível e rascunhos brutos flexíveis.</td>
+                            <td>Perda de continuidade em textos longos; "IA-slop" perceptível.</td>
+                            <td>Texto Puro</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ebookmaker.ai</strong></td>
+                            <td>Geração "um-clique" em menos de 5 minutos; ideal para validação de ideias rápida.</td>
+                            <td>Baixo controle granular sobre a voz e estilo editorial.</td>
+                            <td>PDF, EPUB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Squibler</strong></td>
+                            <td>Gestão de arcos narrativos e personagens para ficção.</td>
+                            <td>Custo elevado ($20/mês); ausência de gerador de capas.</td>
+                            <td>PDF, DOCX, TXT</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Diferencial Estratégico</h3>
+                <p>A <strong>continuidade de capítulos</strong> é o fator crítico de sucesso. Ferramentas que mantêm coerência narrativa ao longo de obras extensas — como a Inkfluence AI — oferecem vantagem competitiva decisiva sobre soluções de prompts isolados.</p>
+            </div>
+        </article>
+
+        <!-- CAPÍTULO 4 -->
+        <article class="capitulo" id="cap4">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">04</div>
+                <h2 class="capitulo-titulo">Identidade Visual e Design de Capas com IA</h2>
+                <p class="capitulo-subtitulo">Do prompt estratégico à finalização profissional</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <p>Em 2026, a criação visual abandonou o amadorismo graças ao <strong>Prompt Estratégico</strong>, que deve conter: <em>Assunto, Estilo, Cenário, Emoção e Especificações Técnicas</em>.</p>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Toolkit de Design de Capas</h3>
+
+            <div class="destaque-box">
+                <h3>As Quatro Ferramentas Essenciais</h3>
+                <ul>
+                    <li><strong>Midjourney:</strong> O "padrão ouro" para fotorrealismo e texturas artísticas complexas.</li>
+                    <li><strong>DALL-E 3:</strong> Superior na compreensão de instruções em linguagem natural e nuances semânticas.</li>
+                    <li><strong>Leonardo.ai:</strong> Controle granular via <em>AI Canvas</em> (edição e expansão de elementos específicos).</li>
+                    <li><strong>Ideogram:</strong> Especialista em tipografia, mitigando erros ortográficos em títulos integrados à imagem.</li>
+                </ul>
+            </div>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Finalização Profissional</h3>
+
+            <p>Todo ativo visual deve ser finalizado em plataformas como <strong>Canva</strong> ou <strong>Adobe Express</strong>. A especificação técnica de 2026 exige:</p>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Especificações Técnicas de Capa (2026)</h3>
+                <ul class="checklist">
+                    <li>Dimensões: <strong>1600 × 2560 px</strong></li>
+                    <li>Resolução mínima: <strong>300 DPI</strong></li>
+                    <li>Garantia de nitidez em telas de alta densidade</li>
+                    <li>Compatibilidade com impressão sob demanda</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- CAPÍTULO 5 -->
+        <article class="capitulo" id="cap5">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">05</div>
+                <h2 class="capitulo-titulo">Integridade Editorial: Revisão Humana e Prevenção de Plágio</h2>
+                <p class="capitulo-subtitulo">Protegendo a originalidade em um ecossistema automatizado</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <p>A integridade é o principal ativo contra a rejeição de conteúdos puramente algorítmicos. O caso <strong>George R.R. Martin vs. OpenAI</strong> serve como alerta crítico sobre os riscos de mineração de dados e direitos de propriedade intelectual.</p>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Fluxo de Verificação e Humanização</h3>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Etapa 1: Detecção de IA</h3>
+                <p>Uso de <strong>Copyleaks</strong>, <strong>ZeroGPT</strong> e <strong>Hastewire</strong> — atentando para o risco de <em>falsos positivos</em> que podem comprometer avaliações incorretas.</p>
+            </div>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Etapa 2: Humanização Estratégica</h3>
+                <ul>
+                    <li>Incorporar <strong>anedotas pessoais</strong> autênticas</li>
+                    <li>Variar a <strong>sintaxe das frases</strong> para quebrar padrões estatísticos</li>
+                    <li>Utilizar <strong>expressões regionais</strong> (PT-BR) para autenticidade cultural</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Etapa 3: Polimento Técnico</h3>
+                <p>Refino gramatical via <strong>Grammarly</strong> para assegurar coesão técnica e correção linguística profissional.</p>
+            </div>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Fundamentação Legal Brasileira</h3>
+
+            <div class="destaque-box">
+                <h3>⚠️ Vácuo Regulatório no Brasil</h3>
+                <p>Atualmente, o Brasil vive um <strong>vácuo regulatório</strong>, sem diretrizes claras na <em>Lei 9.610/98</em> ou <em>Lei 9.609/98</em> sobre IA. Estrategistas devem olhar para os modelos do <strong>U.S. Copyright Office</strong> e a regulação baseada em risco da <strong>União Europeia</strong>.</p>
+            </div>
+
+            <blockquote>
+                A proteção legal exige <strong>intervenção humana significativa</strong>; a IA, por si só, não pode ser titular de direitos autorais em território nacional.
+            </blockquote>
+        </article>
+
+        <!-- CAPÍTULO 6 -->
+        <article class="capitulo" id="cap6">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">06</div>
+                <h2 class="capitulo-titulo">Fluxo de Publicação e Distribuição em Plataformas Digitais</h2>
+                <p class="capitulo-subtitulo">Estratégias técnicas de distribuição multicanal</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <p>A escolha do formato de arquivo é uma <strong>decisão técnica de distribuição</strong>, não apenas de preferência. Cada plataforma possui requisitos específicos que impactam diretamente a receita e o alcance.</p>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Principais Plataformas</h3>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Amazon KDP</h3>
+                <ul>
+                    <li>Exige o uso do <strong>Kindle Create</strong> para formatação otimizada</li>
+                    <li>Sucesso depende da escolha de até <strong>7 palavras-chave de cauda longa</strong></li>
+                    <li>Seleção de categorias específicas para visibilidade</li>
+                    <li>Royalties de até <strong>70%</strong> condicionados à exclusividade ou faixas de preço</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3 class="info-box-titulo">Hotmart / Ebooker</h3>
+                <p>Foco em <strong>vendas diretas</strong> e funis de marketing. Ideal para produtos de alto valor agregado com estratégia de lançamento estruturada.</p>
+            </div>
+
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--cor-primaria); margin: 35px 0 20px 0;">Checklist de Formatação Crítica</h3>
+
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Especificação</th>
+                            <th>Prioridade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>EPUB</strong></td>
+                            <td>Obrigatório para dispositivos móveis e Kindle (texto refluível)</td>
+                            <td>🔴 Essencial</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PDF</strong></td>
+                            <td>Ideal para Lead Magnets e materiais com layout fixo (impressão)</td>
+                            <td>🟡 Recomendado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Índice Interativo</strong></td>
+                            <td>Links clicáveis para navegação fluida entre capítulos</td>
+                            <td>🔴 Essencial</td>
+                        </tr>
+                        <tr>
+                            <td><strong>300 DPI</strong></td>
+                            <td>Verificação de resolução de capa e imagens internas</td>
+                            <td>🔴 Essencial</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Audiobook Integration</strong></td>
+                            <td>Aproveitar exportação de voz para diversificar canais de receita</td>
+                            <td>🟢 Diferencial</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <!-- CAPÍTULO 7 -->
+        <article class="capitulo" id="cap7">
+            <header class="capitulo-cabecalho">
+                <div class="capitulo-numero">07</div>
+                <h2 class="capitulo-titulo">Conclusão e Perspectivas de Mercado</h2>
+                <p class="capitulo-subtitulo">O futuro da publicação digital em um mundo pós-IA</p>
+                <div class="capitulo-divisor"></div>
+            </header>
+
+            <div class="conclusao-especial">
+                <h2>A Nova Barreira: Autoridade</h2>
+                <p>Em 2026, a barreira de entrada para a publicação digital foi derrubada, mas a barreira de <strong>autoridade</strong> subiu exponencialmente.</p>
+            </div>
+
+            <p>O diferencial competitivo não é a ferramenta de IA utilizada, mas a capacidade do autor de injetar <strong>"voz única"</strong> e <strong>curadoria crítica</strong> em um mar de conteúdos automatizados — o temido <em>"AI-slop"</em>.</p>
+
+            <div class="destaque-box">
+                <h3>A Fórmula do Sucesso em 2026</h3>
+                <p>O sucesso reside na <strong>orquestração</strong>: usar a IA para a eficiência estrutural e o humano para a conexão emocional e validação técnica.</p>
+            </div>
+
+            <p>Os profissionais que dominarem essa sinergia — sabendo quando delegar à máquina e quando intervir com expertise humana — serão os grandes vencedores do novo ecossistema editorial.</p>
+
+            <blockquote>
+                "A IA orquestra a estrutura; o humano imprime a alma."
+            </blockquote>
+        </article>
+
+    </main>
+
+    <!-- ==================== RODAPÉ ==================== -->
+    <footer class="rodape-livro">
+        <p><strong>Relatório Técnico: Ecossistema de Produção de E-books com IA em 2026</strong></p>
+        <p>Elaborado por Estrategista de Publicação Digital e Especialista em Fluxos de Trabalho de IA</p>
+        <p>12 de fevereiro de 2026</p>
+    </footer>
+
+    <!-- ==================== NAVEGAÇÃO ==================== -->
+    <div class="nav-flutuante">
+        <a href="#indice" class="nav-btn" title="Voltar ao Índice">☰</a>
+    </div>
+
+</body>
+</html>
